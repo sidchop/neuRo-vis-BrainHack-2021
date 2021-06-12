@@ -1,0 +1,92 @@
+---
+title: "Viewing Nifti images in R"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r, echo=FALSE}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+Lets install in the packages required for this tutorial (should take ~3mins):
+```{r,include=FALSE}
+install.packages("neurobase")
+install.packages("papayar")
+library(neurobase)
+library(papayar)
+```
+
+
+
+First we will load in a Nifti image and see if we can view a slice. As `nifti` objects inherits the properties of an array, you can perform a series of operations on them, such as addition/subtraction/division, as you would an array. A nifti object has additional attributes and the nifti object is an S4 object. This means that you do not reference additional information using the $ operator.
+
+```{r}
+file = system.file("extdata", "example.nii.gz", package = "RNifti") #here we are using a example nifti file provided by the RNifti package. 
+img = readnii(file) #load the nifti file into R
+print(img)
+
+```
+
+
+Lets visualize a single slice:
+```{r}
+image(img, z = 35, plot.type = "single")
+```
+
+We can also change the plane, and view multiple specific slices:
+
+```{r}
+image(img, z = c(40,45, 50,55), plot.type = "single", plane = "sagittal")
+```
+
+Or we can just view all slices, which can be useful for checking quality of images:
+
+```{r}
+image(img)
+```
+We can also use the `ortho2` function to view all three places at once:
+```{r}
+ortho2(img)
+```
+
+Lets try some basic manipulations on the image, but visualising a overlay which shows the top 10% of voxel intensities. 
+```{r}
+overlay(img, y = img > quantile(img, 0.9), z = 30, plot.type = "single")
+```
+
+
+We can also use the above overlay as a mask on the original nifti:
+```{r}
+mask = img > quantile(img, 0.95)
+mask[ mask == 0] = NA
+overlay(img, y = mask, z = 30, plot.type = "single")
+
+```
+
+But what if you want to be able to interact with the image and be able to move the slices manually? There is a nice little package called `papayar`. Running the below will open a new window with a interactive nifti viewer. If you run this locally on Rstudio, the interactive nifti viewer will appear in your `Viewer` window. 
+
+```{r, include=FALSE}
+papaya(img)
+```
+
+Nonetheless, the functionality of  `papayar` is limited, and I still often use `fsleyes` when looking at images, which you can open directly from r using the `fsleyes` function, as long as you have fsleyes installed on your computer.We wont go into too much detail here, but you can also run commonly used function from packages such as FSL and ANTs. These wont work on R studio cloud as these packages need access to fsl/ants, installtions which if you have installed on your computer, you can run the below code on your local R studio. Here is an example of skull-stripping using the `fslr` package. 
+
+```{r, include=FALSE}
+install.packages("fslr") 
+library("fslr")
+img_noSkull <- fslbet(infile = img)
+fsleyes(img_noSkull)
+```
+
+
+
+ˆ

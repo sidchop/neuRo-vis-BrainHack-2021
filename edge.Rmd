@@ -1,0 +1,117 @@
+---
+title: "Visulising edge-level brain data in R"
+output: html_notebook
+---
+
+We will now move onto visualising edge-level data. somtimes the result of our neuroimaging analyses result in egge-level values, in the form of a adjcency or connectivity matrix. The primary input is a n by n square-matrix, where n is the number of brain regions (aka nodes), and each elemet of a matrix related to a connectivity value (aka an edge). We will primarly be using the `brainconn` package which allows us to plot brain networks in 2d and interactive 3d. 
+
+Lets first install `brainconn` and `pheatmap`
+
+```{r, include=FALSE}
+install.packages("remotes")
+remotes::install_github("sidchop/brainconn")
+install.packages("lattice")
+
+```
+
+`brainconn` comes with a few example connectivity matrices. We will first use the a unweighted (edges are either present or absent i.e. 1 or 0), and undirected (i.e. symmetric). Before we plot this network on a brain, lets just plot it at a square plot to get an idea of what kind of data we are working with. 
+```{r}
+library("brainconn")
+x <- as.matrix(example_unweighted_undirected)
+dim(x)
+```
+
+```{r}
+library("lattice")
+levelplot(x, main = "example_unweighted_undirected", ylab = "ROI", xlab = "ROI", scales=list(draw=FALSE))
+```
+Since the example matric has 300 rois, which relate to the Schaefer 300 atlas, we will plot it using the same atlas. `brainconn` comes with many atlas, and it is simple to add your own [add link to atlas creation docs].
+
+```{r}
+x <- example_unweighted_undirected
+brainconn(atlas ="schaefer300_n7", conmat=x, node.size = 3, view="ortho")
+```
+
+You can change the default view, node, edge and background properties as well as show all nodes of the atlas, rather than just the ones that have connected edges.  
+```{r}
+brainconn(atlas ="schaefer300_n7", 
+          conmat=example_unweighted_undirected,
+          view="left",
+          node.size = 3, 
+          node.color = "hotpink", 
+          edge.width = 2, 
+          edge.color="darkblue",
+          edge.alpha = 0.8, 
+          all.nodes = T, 
+          show.legend = F)
+```
+
+If the connectivity matrix you input is not a binary matrix, i.e. the values are weighted, by default `braincon()` will modulate the `edge.width` by the weighted values. `scale.edge.width` can be used to scale the edge width.
+
+```{r}
+x <- example_weighted_undirected
+brainconn(atlas ="schaefer300_n7", conmat=x, node.size = 5,view="top", scale.edge.width = c(1,3), background.alpha = 0.4, show.legend = F)
+```
+You can also color the edges by weight using the `edge.color.weighted` option and change the colour scale used using `scale_edge_colour_*` functions
+
+```{r}
+brainconn(atlas ="schaefer300_n7", 
+          conmat=example_weighted_undirected, 
+          node.size = 7,view="bottom", 
+          edge.width = 2, 
+          edge.color.weighted = T, 
+          show.legend = T) +
+  scale_edge_colour_gradient2(low='yellow', mid='orange', high='red')
+```
+If the input is a directed matrix (i.e. non-symmetrical), the edges will be displayed as directed arrows, with the `edge.width` and `edge.color` serving the same purpose:
+
+```{r}
+x <- example_unweighted_directed
+brainconn(atlas ="schaefer300_n7", conmat=x, node.size = 4, view="right", edge.alpha = 0.6)
+```
+
+Weighted and directed matrix example:
+```{r}
+x <- example_weighted_directed
+brainconn(atlas ="schaefer300_n7", conmat=x, view="front", edge.color.weighted=T) +
+    scale_edge_colour_viridis() 
+```
+
+
+You can auto add `labels`, but this doesn't work to great if theirs a large number of edges. 
+```{r}
+brainconn(atlas ="schaefer300_n7", conmat=example_unweighted_undirected, labels = T, label.size = 2, node.size = 3)
+```
+
+If you want to weight the nodes by a feature such as degree, you can provide a vector the length of the number of ROIs in the parcellation to `node.size`: 
+
+```{r}
+x <- example_unweighted_undirected
+x_igraph <- igraph::graph_from_adjacency_matrix(as.matrix(example_unweighted_undirected)) #convert connectivity matrix into an graph object.
+d <- igraph::degree(x_igraph) #use igraph::degree to obtain a vector of nodal degree
+d <- d[d != 0] #remove nodes with no edges 
+brainconn(atlas ="schaefer300_n7", conmat=x, node.size = d)
+```
+
+
+
+## Basic use of `brainconn3D()`
+Currently, `brainconn3D()` is only able to visualize binary undirected connectivity matrices. 
+
+```{r,}
+brainconn3D(atlas ="schaefer300_n7", conmat=example_unweighted_undirected, show.legend = F)
+
+```
+
+Modifiable features include `node.color`, `node.size`, `edge.size` & `edge.width`, brain surface `opacity` and `d.factor` (a multiplication factor to control the spread of nodes.)
+```{r}
+brainconn3D(atlas = "schaefer300_n7", conmat=example_unweighted_undirected, edge.width = 6, edge.color = "green", node.size = 8, node.color = "red", show.legend = F)
+
+```
+
+
+The `d.factor` can be adjusted for different purposes such as electrode height. The default is set to 1.05.
+```{r}
+brainconn3D(atlas ="schaefer300_n7", conmat=example_unweighted_undirected, edge.width = 3, edge.color = "brown", node.size = 3, d.factor = 1.3, all.nodes = T, opacity = 0.3, show.legend = F)
+
+```
