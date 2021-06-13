@@ -7,7 +7,7 @@ This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute
 
 Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
 
-```{r, echo=FALSE}
+```{r, include = FALSE}
 plot(cars)
 ```
 
@@ -17,7 +17,7 @@ When you save the notebook, an HTML file containing the code and output will be 
 
 The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
 
-Lets install in the packages required for this tutorial (should take ~3mins):
+Lets install in the packages required for this tutorial (should take ~3mins).
 ```{r,include=FALSE}
 install.packages("neurobase")
 install.packages("papayar")

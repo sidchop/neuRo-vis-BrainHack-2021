@@ -3,7 +3,7 @@ title: "Visulising edge-level brain data in R"
 output: html_notebook
 ---
 
-We will now move onto visualising edge-level data. somtimes the result of our neuroimaging analyses result in egge-level values, in the form of a adjcency or connectivity matrix. The primary input is a n by n square-matrix, where n is the number of brain regions (aka nodes), and each elemet of a matrix related to a connectivity value (aka an edge). We will primarly be using the `brainconn` package which allows us to plot brain networks in 2d and interactive 3d. 
+We will now move onto visualizing edge-level data. sometimes the result of our neuroimaging analyses result in egge-level values, in the form of a adjacency or connectivity matrix. The primary input is a n by n square-matrix, where n is the number of brain regions (aka nodes), and each element of a matrix related to a connectivity value (aka an edge). We will primarily be using the `brainconn` package which allows us to plot brain networks in 2d and interactive 3d. 
 
 Lets first install `brainconn` and `pheatmap`
 
@@ -25,7 +25,7 @@ dim(x)
 library("lattice")
 levelplot(x, main = "example_unweighted_undirected", ylab = "ROI", xlab = "ROI", scales=list(draw=FALSE))
 ```
-Since the example matric has 300 rois, which relate to the Schaefer 300 atlas, we will plot it using the same atlas. `brainconn` comes with many atlas, and it is simple to add your own [add link to atlas creation docs].
+Since the example matrix has 300 rois, which relate to the Schaefer 300 atlas, we will plot it using the same atlas. `brainconn` comes with many atlas, and it is simple to add your own [add link to atlas creation docs].
 
 ```{r}
 x <- example_unweighted_undirected
@@ -86,9 +86,8 @@ brainconn(atlas ="schaefer300_n7", conmat=example_unweighted_undirected, labels 
 If you want to weight the nodes by a feature such as degree, you can provide a vector the length of the number of ROIs in the parcellation to `node.size`: 
 
 ```{r}
-x <- example_unweighted_undirected
-x_igraph <- igraph::graph_from_adjacency_matrix(as.matrix(example_unweighted_undirected)) #convert connectivity matrix into an graph object.
-d <- igraph::degree(x_igraph) #use igraph::degree to obtain a vector of nodal degree
+x <- example_unweighted_undirected #convert connectivity matrix into an graph object.
+d <- rowSums(x) #use igraph::degree to obtain a vector of nodal degree
 d <- d[d != 0] #remove nodes with no edges 
 brainconn(atlas ="schaefer300_n7", conmat=x, node.size = d)
 ```

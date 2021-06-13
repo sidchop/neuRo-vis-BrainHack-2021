@@ -7,12 +7,13 @@ We will now move onto visualising region level data. Often the result of our neu
 
 Lets first install the packages: 
 
-#```{r, eval = FALSE}
-#install.packages("ggseg")
-#install.packages("ggseg3d")
-#remotes::install_github("LCBC-UiO/ggsegSchaefer")
-#```
+```{r, include = FALSE}
+install.packages("ggseg")
+install.packages("ggseg3d")
+remotes::install_github("LCBC-UiO/ggsegSchaefer")
+```
 
+And then load them up.
 ```{r}
 library("ggseg")
 library("ggseg3d")
@@ -41,7 +42,7 @@ ggseg(mapping=aes(fill=region), position="stacked",
 ```
 
 
-Now lets try colour the brain regious by some value which relates to our own input data. All atlases included with `ggseg` contain data.tables with all the regions included in the atlas. Lets first grab the all the regions in the atlas for both hemispheres. 
+Now lets try colour the brain regions by some value which relates to our own input data. All atlases included with `ggseg` contain data.tables with all the regions included in the atlas. Lets first grab the all the regions in the atlas for both hemispheres. 
 
 ```{r}
 base_atlas = as.data.frame(na.omit(cbind(dk$data$region, dk$data$hemi)))
@@ -49,7 +50,7 @@ colnames(base_atlas) <- c("region", "hemi")
 head(base_atlas,5)
 ```
 
-For now we are just going to genrate random numbers as input, but here you can use your own values.
+For now we are just going to generate random numbers as input, but here you can use your own values.
 
 ```{r}
 set.seed(3241)
@@ -80,7 +81,7 @@ ggseg(regions,mapping=aes(fill=as.numeric(value)), hemi= "right", colour="white"
 
 ```
 
-`ggseg` also allows us to visualise subcortial structures.
+`ggseg` also allows us to visualize subcortial structures.
 
 ```{r}
 ggseg(atlas = "aseg")
@@ -98,18 +99,18 @@ ggseg(atlas = "aseg",regions,mapping=aes(fill=as.numeric(value)), view = "axial"
 ```
 
 
-A sister package related to `ggseg`, called `ggseg3d` allows us to visualise our ROI level data in interactive 3D. We will briefly go though some of the basic funtionality. 
+A sister package related to `ggseg`, called `ggseg3d` allows us to visualise our ROI level data in interactive 3D. We will briefly go though some of the basic functionality. 
 
 ```{r}
 ggseg3d(atlas = "schaefer7_3d")
 ```
 
-Lets remove some of the axis labels and set the cammera to a angle we wont.
+Lets remove some of the axis labels and set the camera to a angle we wont.
 
 ```{r}
 plot <- ggseg3d(atlas = "schaefer7_3d")  
 plot <- remove_axes(plot)
-pan_camera(plot, "right medial") 
+pan_camera(plot, "left medial") 
 ```
 
 
