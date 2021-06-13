@@ -88,5 +88,30 @@ fsleyes(img_noSkull)
 ```
 
 
+#lets try a gorup level
+
+```{r}
+
+template <- readnii("data/MNI152_T1_1mm_brain.nii.gz")
+effect <- readnii("data/frdaltcont_Cohens_d_1mm.nii.gz")
+image(template, z = 60, plot.type = "single", plane = "sagittal")
+image(effect , z = 60, plot.type = "single", plane = "sagittal")
+
+
+effect[effect<0.4] <- NA
+
+print(template)
+print(effect)
+overlay(template, y = effect, z = c(seq(1,100, by = 10)) , plot.type = "single", col.y = "red", bg = "white",NA.x = T)
+
+ortho2(x = template, y = effect, crosshairs = F, bg = "white", NA.x = T, add.orient = T, col.y  = hotmetal(), ycolorbar = T)
+```
+
+
+
+
+
+
+
 
 ˆ
