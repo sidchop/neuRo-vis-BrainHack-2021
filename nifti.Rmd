@@ -39,19 +39,25 @@ print(img)
 
 Lets visualize a single slice:
 ```{r}
-image(img, z = 35, plot.type = "single")
+  image(img, z = 35, plot.type = "single")
+```
+
+
+We can adjust the brightness of the image by changing the upper and lower limits of the colours shown using `zlim`. 
+```{r}
+image(img, z = 35, plot.type = "single", zlim = c(0, 1500))
 ```
 
 We can also change the plane, and view multiple specific slices:
 
 ```{r}
-image(img, z = c(40,45, 50,55), plot.type = "single", plane = "sagittal")
+image(img, z = c(40,45, 50,55), plot.type = "single", plane = "sagittal", zlim = c(0, 1500))
 ```
 
 Or we can just view all slices, which can be useful for checking quality of images:
 
 ```{r}
-image(img)
+image(img, zlim = c(0, 1500))
 ```
 We can also use the `ortho2` function to view all three places at once:
 ```{r}
