@@ -3,7 +3,7 @@ title: "Visulising ROI-level brain data in R"
 output: html_notebook
 ---
 
-We will now move onto visualising region level data. Often the result of our neuroimaging analyses are values assiged to spesifc brain regions. These values can be a test statistic (e.g. T-score), a effect size, a measure of cortical thickness or volume or anything at all. A great package for visualsing these values on brains is `ggseg` and `ggseg3D`. We will go though both below.
+We will now move onto visualising region level data. Often the result of our neuroimaging analyses are values assigned to spesifc brain regions. These values can be a test statistic (e.g. T-score), a effect size, a measure of cortical thickness or volume or anything at all. A great package for visualizing these values on brains is `ggseg` and `ggseg3D`. We will go through both below. Thanks to Dr Athanasia Mowinckel (https://github.com/Athanasiamo) for creating these packages and provided great documentation and tutorials.  
 
 Lets first install the packages: 
 
@@ -13,7 +13,8 @@ install.packages("ggseg3d")
 remotes::install_github("LCBC-UiO/ggsegSchaefer")
 ```
 
-And then load them up.
+And then load them up:
+
 ```{r}
 library("ggseg")
 library("ggseg3d")
@@ -21,23 +22,25 @@ library("ggplot2")
 library("ggsegSchaefer")
 ```
 
-Calling the `ggseg` function will display the base graphic used by ggseg (left/right, medial/lateral images)
+Calling the `ggseg` function alone will display the base graphic (geom) used by ggseg (left/right, medial/lateral images):
 
 ```{r}
 ggseg()
 ```
 
-There are many brain atleses avalibe in `ggseg`, but we will just use the Desikan-Killany cortical atlas for now, and colour seperatly each regions.
+There are many brain atleses avalibe in `ggseg`, but we will just use the Desikan-Killany cortical atlas ('dk') for now, and colour by regions .
 ```{r}
 ggseg(atlas = "dk", mapping=aes(fill=region))
 ```
 
 
-Lets get rid of the legend, and stack the four images and change the thickness of the boundry around each region and add a title. Try fooling around with the colour and size parameters.
+Lets get rid of the legend, and stack the four images and change the thickness of the boundary around each region and add a title. Try fooling around with the colour and size parameters:
 
 ```{r}
-ggseg(mapping=aes(fill=region), position="stacked",
-        colour="black",size=.8,show.legend = F) +
+ggseg(mapping=aes(fill=region), 
+      position="stacked",
+        colour="black",
+      size=.8,show.legend = F) +
   ggtitle("Desikan-Killany cortical atlas")
 ```
 
@@ -45,7 +48,7 @@ ggseg(mapping=aes(fill=region), position="stacked",
 Now lets try colour the brain regions by some value which relates to our own input data. All atlases included with `ggseg` contain data.tables with all the regions included in the atlas. Lets first grab the all the regions in the atlas for both hemispheres. 
 
 ```{r}
-base_atlas = as.data.frame(na.omit(cbind(dk$data$region, dk$data$hemi)))
+base_atlas <- as.data.frame(na.omit(cbind(dk$data$region, dk$data$hemi)))
 colnames(base_atlas) <- c("region", "hemi")
 head(base_atlas,5)
 ```
@@ -53,8 +56,8 @@ head(base_atlas,5)
 For now we are just going to generate random numbers as input, but here you can use your own values.
 
 ```{r}
-set.seed(3241)
-brain_volume <- rnorm(dim(base_atlas)[1]) #here you would enter your own date that you wanted to plot
+set.seed(1993) #set a random seed (good practice for reproducibility)
+brain_volume <- rnorm(dim(base_atlas)[1]) #generate a random numbers for each roi in the atlas
 base_atlas <- cbind(base_atlas, brain_volume)
 ggseg(base_atlas, mapping=aes(fill=brain_volume), position="stacked",
         colour="black",size=.8,show.legend = T) +
@@ -71,17 +74,30 @@ ggseg(base_atlas, mapping=aes(fill=brain_volume), position="stacked",
   ggtitle("Lets plot some values on the brain!") + scale_fill_gradientn(colours=c("dodgerblue4","light blue","firebrick","goldenrod"))
 ```
 
-We can also select specific regions which are of interest to you. 
+We can also select specific regions which are of interest to you:
 
 ```{r}
-regions <- data.frame(cbind(region=c("superior frontal","insula"),value=c(2.4,5.5)),hemi=c("right","right"),
-                     stringsAsFactors=F)
+regions <- data.frame(cbind(region=c("superior frontal","insula"),
+                            value=c(2.4,5.5)),hemi=c("right","right"))
 
-ggseg(regions,mapping=aes(fill=as.numeric(value)), hemi= "right", colour="white",size=.3) 
+ggseg(regions,mapping=aes(fill=as.numeric(value)), hemi= c("right"), colour="white",size=.3) 
 
 ```
 
-`ggseg` also allows us to visualize subcortial structures.
+Try completing the code below to select some other regions and assigne values to them:
+
+```{r}
+#HINT: you can view the names of the ROIs in this atlas by calling base_atlas$region
+other_regions <- data.frame(cbind(region=c(""),
+                            value=c()),hemi=c(""))
+
+ggseg(other_regions,mapping=aes(fill=as.numeric(value)), hemi= c("right", "left"), colour="white",size=.3) 
+
+```
+
+
+
+`ggseg` also allows us to visualize subcortial structures. The base image (geom) is a set axial and sagittal slice, and the regions correspond the the `aseg` atlas from freesurfer.
 
 ```{r}
 ggseg(atlas = "aseg")
@@ -99,7 +115,7 @@ ggseg(atlas = "aseg",regions,mapping=aes(fill=as.numeric(value)), view = "axial"
 ```
 
 
-A sister package related to `ggseg`, called `ggseg3d` allows us to visualise our ROI level data in interactive 3D. We will briefly go though some of the basic functionality. 
+A sister package related to `ggseg`, called `ggseg3d` allows us to visualize our ROI level data in interactive 3D. We will briefly go though some of the basic functionality. The atlas we will use is the Schaefer 7-network resting-state atlas.
 
 ```{r}
 ggseg3d(atlas = "schaefer7_3d")
@@ -185,6 +201,7 @@ return(plot)
 And here is an example use of this function:
 
 ```{r, eval = FALSE}
+set.seed(1993)
 volume <- sample(1:20, 14) #randomly generated data for 14 structures
 make_ggseg3d(volume, colour.pal = c("white", "firebrick"))
 ```
