@@ -3,7 +3,7 @@ title: "Visulising edge-level brain data in R"
 output: html_notebook
 ---
 
-We will now move onto visualizing edge-level data. sometimes the result of our neuroimaging analyses result in egge-level values, in the form of a adjacency or connectivity matrix. The primary input is a n by n square-matrix, where n is the number of brain regions (aka nodes), and each element of a matrix related to a connectivity value (aka an edge). We will primarily be using the `brainconn` package which allows us to plot brain networks in 2d and interactive 3d. 
+We will now move onto visualizing edge-level data. sometimes the result of our neuroimaging analyses result in edge-level values, in the form of a adjacency or connectivity matrix. The primary input is a n by n square-matrix, where n is the number of brain regions (aka nodes), and each element of a matrix related to a connectivity value (aka an edge). We will primarily be using the `brainconn` package which allows us to plot brain networks in 2d and interactive 3d. 
 
 Lets first install `brainconn` and `pheatmap`
 
