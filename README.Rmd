@@ -13,7 +13,7 @@ These notebooks were developed to be presented at the TrainTrack 2021 edition of
 
 This short series of R-notebooks will introduce to to some of the neuroimaging data visualization tools  R. You can work though these notebooks on RStudio Cloud, or locally on Rstudio. If you are using Rstudio cloud, or have git installed, clone this get repo by typing the following in to the terminal: 
 
-`git clone sidchop/neuRo-vis-BrainHack-2021`
+`git clone https://github.com/sidchop/neuRo-vis-BrainHack-2021.git`
 
 
 ## Structure 
