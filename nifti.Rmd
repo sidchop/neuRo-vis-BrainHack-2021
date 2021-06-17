@@ -25,7 +25,6 @@ install.packages("papayar")
 ```
 
 
-
 First we will load in a Nifti image and see if we can view a slice. As `nifti` objects inherits the properties of an array, you can perform a series of operations on them, such as addition/subtraction/division, as you would an array. A nifti object has additional attributes and the nifti object is an S4 object. This means that you do not reference additional information using the $ operator.
 
 ```{r}
@@ -38,37 +37,51 @@ print(img)
 
 Lets visualize a single slice:
 ```{r}
-  image(img, z = 80, plot.type = "single", plane = "axial")
+  image(img, 
+        z = 80, 
+        plot.type = "single", 
+        plane = "axial")
 ```
 
-Try chaging the slice (`z`) and viewing in a differnt plane (e.g. "sagittal" or "coronal")
+Try chaging the slice (`z`) and viewing in a different plane (e.g. "sagittal" or "coronal")
 ```{r}
-  image(img, z = 80, plot.type = "single", plane = "axial")
+  image(img, 
+        z = , 
+        plot.type = "single", 
+        plane = "")
 ```
 
 
 We can adjust the brightness of the image by changing the upper and lower limits of the colors shown using `zlim`. 
 
 ```{r}
-image(img, z = 80, plot.type = "single", zlim = c(0, 18000))
+image(img, z = 80, 
+      plot.type = "single", 
+      zlim = c(0, 18000))
 ```
 
-We can also change the plane, and view multiple specific slices:
+We can also change the plane, and view multiple specific slices by making `z` a vector:
 
 ```{r}
-image(img, z = c(60,80, 90,100), plot.type = "single", plane = "sagittal")
+image(img, 
+      z = c(60,80, 90,100),
+      plot.type = "single", 
+      plane = "sagittal")
 ```
 
 
-Try selecting some different slices and changing the plane:
+Try selecting some different slices and changing the plane (e.g."axial", "sagittal" or "coronal"):
 
 ```{r}
-image(img, z = c(60,80, 90,100), plot.type = "single", plane = "sagittal")
+image(img, z = c(),
+      plot.type = "single", 
+      plane = "")
 ```
 
 
 
 Or we can just view all slices, which can be useful for checking quality of images. This can take a while if you image has a lot of slices, so it might be better to select a few representative slices.
+
 
 ```{r}
 image(img)
@@ -82,16 +95,22 @@ ortho2(img)  #try getting rid of the crosshairs using `crosshairs = FALSE`
 
 Lets try some basic manipulations on the image, by first creaking a mask of the top 10% of voxel intensities, which should roughly correspond to white matter. We will then add this mask as an overlay to our original image using the `overlay` function, where `y =` will correspond to the mask.
 ```{r}
-mask <- img
+mask <- img #copy to image to a mask variable to get it ready for manipulation
 mask[mask<quantile(mask, 0.9)] <- NA
-overlay(img, y = mask, z = 80, plot.type = "single")
+overlay(img, 
+        y = mask, 
+        z = 80, 
+        plot.type = "single")
 ```
 
-Try visualizing multiple slices of this rought white matter mask, and also chaging the percentile from .9 (90%) to some other numbers.
+Try visualizing multiple slices of this rough white matter mask, and also chaging the percentile from .9 (90%) to some other numbers.
 ```{r}
 mask <- img
 mask[mask<quantile(mask, 0.9)] <- NA
-overlay(img, y = mask, z = 80, plot.type = "single")
+overlay(img, 
+        y = mask, 
+        z = c(), 
+        plot.type = "single")
 ```
 
 
@@ -102,35 +121,43 @@ library(papayar)
 papaya(img)
 ```
 
-Nonetheless, the functionality of  `papayar` is limited, and I still often use `fsleyes` when I want to quickly looking at images interactivtly, which you can open directly from r using the `fsleyes` function of the `fslr` package, as long as you have fsleyes installed on your computer. We wont go into too much detail here, but you can also run commonly used function from packages such as FSL and ANTs. These wont work on R studio cloud as these packages need access to fsl/ants, installations which if you have installed on your computer, you can run the below code later on your local R studio. Here is an example of skull-stripping using the `fslr` package. 
+Nonetheless, the functionality of  `papayar` is limited, and I still often use `fsleyes` when I want to quickly looking at images interactively, which you can open directly from r using the `fsleyes` function of the `fslr` package, as long as you have fsleyes installed on your computer. We wont go into too much detail here, but you can also run commonly used function from packages such as FSL and ANTs. These wont work on R studio cloud as these packages need access to fsl/ants, installations which if you have installed on your computer, you can run the below code later on your local R studio. Here is an example of skull-stripping using the `fslr` package. 
 
 ```{r, include=FALSE, eval=FALSE}
-install.packages("fslr") 
+#install.packages("fslr") 
 library("fslr")
 img_noSkull <- fslbet(infile = img)
 fsleyes(img_noSkull)
 ```
 
 
-Lets try a little excercise where we overlay a metric on our template image, such as a effect size. I have provided a Cohen's D effect size voxel map from a study where we compared grey matter volume in people with a rare ataxia and healthy contols (data/frdaltcont_Cohens_d_1mm.nii.gz). Try loading in the effect, thresholding it at some value between 0 and 1, and overlaying it on our original img file. I have provided some semi-completed code below.
+Lets try a little exercise where we overlay a metric on our template image, such as a effect size. I have provided a Cohen's D effect size voxel map from a study where we compared grey matter volume in people with a rare ataxia and healthy contols (data/frdaltcont_Cohens_d_1mm.nii.gz). Try loading in the effect, thresholding it at some value between 0 and 1, and overlaying it on our original img file. I have provided some semi-completed code below.
 
 ```{r}
 
 effect <- readnii("data/frdaltcont_Cohens_d_1mm.nii.gz")  #read in the effect size map
-image() #visualise the map (remember to set plot.type = "single" and select a slicr using `z=`, or all slices will be visualized!)
+image(z=, plot.type = "single") #visualize the map (remember to set `plot.type = "single" and select a slice using `z=`, or all slices will be visualized!)
 
 effect[effect<0.4] <- NA #threshold the effect size map to a value between 0 and 1.. maybe we only want to see the strong effects greater than .8.
 
-#Complete the `overlay` function code below.
-overlay(x=img , y =  , z =  , plot.type = "single")
+#Complete the `overlay` function code below. Remember that `y=` is the overlay and `z=` is the slice or slices you want to visualize. 
+overlay(x=img , 
+        y =  , 
+        z =  , 
+        plot.type = "single")
 
 ```
 
 
-Here is a (almost) publication ready plot, using some addtional methods and the overlay function:
+Here is a (almost) publication ready plot, using some additional methods and the overlay function:
 
 ```{r}
-overlay(img, y = effect, z = c(seq(20,100, by = 10)) , plot.type = "single", col.y = "red", bg = "white",NA.x = T)
+overlay(img, 
+        y = effect, 
+        z = c(seq(20,100, by = 10)) ,
+        plot.type = "single", 
+        col.y = "red", 
+        bg = "white",NA.x = T)
 
 ```
 
