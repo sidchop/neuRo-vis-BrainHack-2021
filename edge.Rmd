@@ -5,36 +5,40 @@ output: html_notebook
 
 We will now move onto visualizing edge-level data. sometimes the result of our neuroimaging analyses result in edge-level values, in the form of a adjacency or connectivity matrix. The primary input is a n by n square-matrix, where n is the number of brain regions (aka nodes), and each element of a matrix related to a connectivity value (aka an edge). We will primarily be using the `brainconn` package which allows us to plot brain networks in 2d and interactive 3d. 
 
-Lets first install `brainconn` and `pheatmap`
+Lets first install `brainconn` and `lattice`
 
 ```{r, include=FALSE}
 install.packages("remotes")
 remotes::install_github("sidchop/brainconn")
 install.packages("lattice")
-
 ```
 
-`brainconn` comes with a few example connectivity matrices. We will first use the a unweighted (edges are either present or absent i.e. 1 or 0), and undirected (i.e. symmetric). Before we plot this network on a brain, lets just plot it at a square plot to get an idea of what kind of data we are working with. 
+`brainconn` comes with a few example connectivity matrices. We will first use the a unweighted (edges are either present or absent i.e. 1 or 0), and undirected (i.e. symmetric). 
+
 ```{r}
 library("brainconn")
 x <- as.matrix(example_unweighted_undirected)
 dim(x)
 ```
 
-Lets just get a better understading of the input matrix we are working with by visulaising just the matrix:
+Before we plot this network on a brain, lets just plot it at a square plot to get an idea of what kind of data we are working with:
 ```{r}
 library("lattice")
-levelplot(x, main = "example_unweighted_undirected", ylab = "ROI", xlab = "ROI", scales=list(draw=FALSE))
+levelplot(x, main = "example_unweighted_undirected", 
+          ylab = "ROI", 
+          xlab = "ROI", 
+          scales=list(draw=FALSE)) 
 ```
 Since the example matrix has 300 rois, which relate to the Schaefer 300 atlas, we will plot it using the same atlas. `brainconn` comes with many atlas, and it is simple to add your own.
 
 ```{r}
 brainconn(atlas ="schaefer300_n7", 
-          conmat=x, node.size = 3, 
+          conmat=x, 
+          node.size = 3, 
           view="ortho")
 ```
 
-Try chaging default view to either "top", "bottom", "left" or "right". Also try changing some of the the other node, edge and background properties. `all.nodes` is an option which displays all nodes of the atlas, rather than just the ones that have connected edges.  
+Try changing default `view` to either "top", "bottom", "left" or "right". Also try changing some of the the other node, edge and background properties. `all.nodes` is an option which displays all nodes of the atlas, rather than just the ones that have connected edges.  
 ```{r}
 brainconn(atlas ="schaefer300_n7", 
           conmat=x,
@@ -60,6 +64,7 @@ brainconn(atlas ="schaefer300_n7",
           background.alpha = 0.4, 
           show.legend = F)
 ```
+
 You can also color the edges by weight using the `edge.color.weighted` option and change the colour scale used using `scale_edge_colour_*` functions
 
 ```{r}
@@ -72,7 +77,7 @@ brainconn(atlas ="schaefer300_n7",
           show.legend = T) +
   scale_edge_colour_gradient2(low='yellow', mid='orange', high='red')
 ```
-If the input is a directed matrix (i.e. non-symmetrical), the edges will be displayed as directed arrows, with the `edge.width` and `edge.color` serving the same putpose. Try plotting the example unweighted_directed matrix:
+If the input is a directed matrix (i.e. non-symmetrical), the edges will be displayed as directed arrows, with the `edge.width` and `edge.color` serving the same purpose. Try plotting the example unweighted_directed matrix:
 
 ```{r}
 x <- example_unweighted_directed
@@ -85,7 +90,8 @@ Weighted and directed matrix example:
 x <- example_weighted_directed
 
 brainconn(atlas ="schaefer300_n7", 
-          conmat=x, view="front", 
+          conmat=x, 
+          view="front", 
           edge.color.weighted=T) + 
   scale_edge_colour_viridis() 
 ```
@@ -93,7 +99,11 @@ brainconn(atlas ="schaefer300_n7",
 
 You can auto add `labels`, but this doesn't work to great if theirs a large number of edges. 
 ```{r}
-brainconn(atlas ="schaefer300_n7", conmat=example_unweighted_undirected, labels = T, label.size = 2, node.size = 3)
+brainconn(atlas ="schaefer300_n7", 
+          conmat=example_unweighted_undirected, 
+          labels = T, 
+          label.size = 2, 
+          node.size = 3)
 ```
 
 If you want to weight the nodes by a feature such as degree (i.e. number of connection each node has), you can provide a vector the length of the number of ROIs in the parcellation to `node.size`: 
@@ -108,7 +118,9 @@ brainconn(atlas ="schaefer300_n7", conmat=x, node.size = d)
 The node are a little hard to see, so try to multiply `d` by a larger number:
 
 ```{r}
-brainconn(atlas ="schaefer300_n7", conmat=x, node.size = d)
+brainconn(atlas ="schaefer300_n7", 
+          conmat=x, 
+          node.size = d)
 ```
 
 
@@ -118,13 +130,21 @@ brainconn(atlas ="schaefer300_n7", conmat=x, node.size = d)
 Currently, `brainconn3D()` is only able to visualize binary undirected connectivity matrices. 
 
 ```{r,}
-brainconn3D(atlas ="schaefer300_n7", conmat=example_unweighted_undirected, show.legend = F)
+brainconn3D(atlas ="schaefer300_n7", 
+            conmat=example_unweighted_undirected, 
+            show.legend = F)
 
 ```
 
 Modifiable features include `node.color`, `node.size`, `edge.size` & `edge.width`, brain surface `opacity` and `d.factor` (a multiplication factor to control the spread of nodes)
 
 ```{r}
-brainconn3D(atlas = "schaefer300_n7", conmat=example_unweighted_undirected, edge.width = 6, edge.color = "green", node.size = 8, node.color = "red", show.legend = F)
+brainconn3D(atlas = "schaefer300_n7", 
+            conmat=example_unweighted_undirected, 
+            edge.width = 6, 
+            edge.color = "green", 
+            node.size = 8, 
+            node.color = "red",
+            show.legend = F)
 
 ```
