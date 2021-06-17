@@ -3,7 +3,7 @@ title: "Visulising ROI-level brain data in R"
 output: html_notebook
 ---
 
-We will now move onto visualising region level data. Often the result of our neuroimaging analyses are values assigned to spesifc brain regions. These values can be a test statistic (e.g. T-score), a effect size, a measure of cortical thickness or volume or anything at all. A great package for visualizing these values on brains is `ggseg` and `ggseg3D`. We will go through both below. Thanks to Dr Athanasia Mowinckel (https://github.com/Athanasiamo) for creating these packages and provided great documentation and tutorials.  
+We will now move onto visualising region level data. Often the result of our neuroimaging analyses are values assigned to specific brain regions. These values can be a test statistic (e.g. T-score), a effect size, a measure of cortical thickness or volume or anything at all. A great package for visualizing these values on brains is `ggseg` and `ggseg3D`. We will go through both below. Thanks to Dr Athanasia Mowinckel (https://github.com/Athanasiamo) for creating these packages and provided great documentation and tutorials.  
 
 Lets first install the packages: 
 
@@ -28,7 +28,7 @@ Calling the `ggseg` function alone will display the base graphic (geom) used by 
 ggseg()
 ```
 
-There are many brain atleses avalibe in `ggseg`, but we will just use the Desikan-Killany cortical atlas ('dk') for now, and colour by regions .
+There are many brain atlases available in `ggseg`, but we will just use the Desikan-Killany cortical atlas ('dk') for now, and colour by regions .
 ```{r}
 ggseg(atlas = "dk", mapping=aes(fill=region))
 ```
@@ -39,9 +39,10 @@ Lets get rid of the legend, and stack the four images and change the thickness o
 ```{r}
 ggseg(mapping=aes(fill=region), 
       position="stacked",
-        colour="black",
-      size=.8,show.legend = F) +
-  ggtitle("Desikan-Killany cortical atlas")
+      colour="black", #colour of the boundary
+      size=.8, #thickness of the boundary 
+      show.legend = F) +
+  ggtitle("Desikan-Killany cortical atlas") #Add a title to the plot
 ```
 
 
@@ -59,8 +60,12 @@ For now we are just going to generate random numbers as input, but here you can 
 set.seed(1993) #set a random seed (good practice for reproducibility)
 brain_volume <- rnorm(dim(base_atlas)[1]) #generate a random numbers for each roi in the atlas
 base_atlas <- cbind(base_atlas, brain_volume)
-ggseg(base_atlas, mapping=aes(fill=brain_volume), position="stacked",
-        colour="black",size=.8,show.legend = T) +
+ggseg(base_atlas, 
+      mapping=aes(fill=brain_volume), 
+      position="stacked",
+      colour="black",
+      size=.8,
+      show.legend = T) +
   ggtitle("Lets plot some values on the brain!")
 
 ```
@@ -69,29 +74,37 @@ ggseg(base_atlas, mapping=aes(fill=brain_volume), position="stacked",
 Lets change the colour pallet used:
 
 ```{r}
-ggseg(base_atlas, mapping=aes(fill=brain_volume), position="stacked",
-        colour="darkblue",size=.8,show.legend = T) +
+ggseg(base_atlas,
+      mapping=aes(fill=brain_volume),
+      position="stacked",
+      colour="darkblue",
+      size=.8,
+      show.legend = T) +
   ggtitle("Lets plot some values on the brain!") + scale_fill_gradientn(colours=c("dodgerblue4","light blue","firebrick","goldenrod"))
 ```
 
 We can also select specific regions which are of interest to you:
 
 ```{r}
-regions <- data.frame(cbind(region=c("superior frontal","insula"),
-                            value=c(2.4,5.5)),hemi=c("right","right"))
+regions <- data.frame(cbind(region=c("superior frontal","insula"), # region name
+                            hemi=c("right","right"), # hemisphere
+                            value=c(2.4,5.5))) # value assigned
 
 ggseg(regions,mapping=aes(fill=as.numeric(value)), hemi= c("right"), colour="white",size=.3) 
 
 ```
 
-Try completing the code below to select some other regions and assigne values to them:
+Try completing the code below to select some other regions and assign values to them:
 
 ```{r}
 #HINT: you can view the names of the ROIs in this atlas by calling base_atlas$region
-other_regions <- data.frame(cbind(region=c(""),
-                            value=c()),hemi=c(""))
-
-ggseg(other_regions,mapping=aes(fill=as.numeric(value)), hemi= c("right", "left"), colour="white",size=.3) 
+other_regions <- (cbind(region=c(), # region name
+                            hemi=c(), # hemisphere
+                            value=c())) # value assigned
+ggseg(other_regions,
+      mapping=aes(fill=as.numeric(value)), 
+      hemi= c("right", "left"), 
+      colour="white",size=.3) 
 
 ```
 
@@ -107,8 +120,7 @@ Lets map some values onto subcortial structure. You can also remove regions we d
 
 ```{r}
 regions = data.frame(cbind(region=c("hippocampus","pallidum",  "putamen"),
-                           value=c(3,2,1)),
-                     stringsAsFactors=F)
+                           value=c(3,2,1)))
 
 ggseg(atlas = "aseg",regions,mapping=aes(fill=as.numeric(value)), view = "axial") 
 
@@ -136,73 +148,15 @@ We can also view subcortical structures in 3D.
 ggseg3d(atlas = "aseg_3d")  
 ```
 
-Here is an example of function with advanced use of ggseg3d which selects 14 commonly used subcortial regions (7 each hemisphere), assigns a user-specifed value, and places the cammera at a nice angle. 
+Here is an example of function I created with advanced use of ggseg3d which selects 14 commonly used subcortial regions (Left-Thalamus, Left-Caudate, Left-Putamen, Left-Pallidum Left-Hippocampus, Left-Amygdala, Left-Accumbens-area, Right-Thalamus-Proper, Right-Caudate, Right-Putamen, Right-Pallidum, Right-Hippocampus, Right-Amygdala, Right-Accumbens-area). It allows users to assign a user-specifed value to each of these regions, and places the camera at a nice angle. 
 
-```{r}
-make_ggseg3d <- function(attribute, 
-                         colour.pal = c("light yellow",
-                                        "orange",
-                                        "red",
-                                        "dark red"), 
-                         hide.colourbar=FALSE, 
-                         output.png=FALSE, 
-                         file.name="ggseg_3d.png") {
-# Inputs: 
-#' attribute = This must be a numeric vector in this: Left-Thalamus, Left-Caudate, Left-Putamen, Left-Pallidum Left-Hippocampus, Left-Amygdala, Left-Accumbens-area, Right-Thalamus-Proper, Right-Caudate, Right-Putamen, Right-Pallidum, Right-Hippocampus, Right-Amygdala, Right-Accumbens-area
-
-library(ggseg3d)
-library(tidyr)
-library(dplyr)
-#remove(aseg_3d)
-aseg_3d <- aseg_3d
-aseg_3d <- tidyr::unnest(aseg_3d, cols = c(ggseg_3d))
-
-attribute.ggseg3d <- c(rep(NA, 4), attribute[1:4], rep(NA, 3), attribute[5:7],
-                       rep(NA, 5), attribute[8:14],  rep(NA, 6))
-
-data <- dplyr::mutate(aseg_3d, attribute =  attribute.ggseg3d)
-#remove NA regions
-aseg_3d[which(is.na(data$attribute)),] <- NA
-aseg_3d <- tidyr::drop_na(aseg_3d)
-
-data[which(is.na(data$attribute)),] <- NA
-data <- tidyr::drop_na(data)
-data$attribute[data$attribute==0]<-NA #make 0 valus NA so they are set as grey in ggseg3d
-
-scene=list(camera = list(eye = list(x = 0, y = 1, z = -2.25)),
-           aspectratio = list(x=1.6,y=1.6,z=1.6))
-
-
-plot <- ggseg3d::ggseg3d(.data = data, 
-                 atlas = aseg_3d, 
-                 colour = "attribute", 
-                 text = "attribute",
-                 palette = colour.pal)
-plot <- remove_axes(plot)
-plot <- plotly::layout(plot, 
-                 scene = scene, 
-                 plot_bgcolor  = "rgba(0, 0, 0, 0)",
-                 paper_bgcolor = "rgba(0, 0, 0, 0)", 
-                 width = 600, height = 600) 
-
-if(hide.colourbar==TRUE){
-  plot <- plotly::hide_colorbar(plot)
-}
-
-if( output.png==TRUE){
-plotly::orca(plot, file =  file.name)
-}
-
-return(plot)
-
-}
-```
-
-And here is an example use of this function:
+Here is an example use of this function:
 
 ```{r, eval = FALSE}
+source("make_ggseg3d.R") #load in the function
 set.seed(1993)
 volume <- sample(1:20, 14) #randomly generated data for 14 structures
-make_ggseg3d(volume, colour.pal = c("white", "firebrick"))
+make_ggseg3d(volume, 
+             colour.pal = c("white", "firebrick"))
 ```
 
