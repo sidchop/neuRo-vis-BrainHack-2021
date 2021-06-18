@@ -10,6 +10,7 @@ Lets first install the packages:
 ```{r, include = FALSE}
 install.packages("ggseg")
 install.packages("ggseg3d")
+install.packages("remotes")
 remotes::install_github("LCBC-UiO/ggsegSchaefer")
 ```
 
