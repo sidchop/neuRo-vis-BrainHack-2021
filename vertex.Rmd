@@ -42,7 +42,7 @@ vis.subject.annot(subjects_dir = subjects_dir,
                   subject_id = 'subject1',
                   atlas =  'aparc',
                   hemi = 'both',
-                  views='t9')
+                  views='sr')
 
 ```
 
@@ -52,14 +52,16 @@ vis.subject.morph.native(subjects_dir = subjects_dir,
                          subject_id = 'subject1', 
                          measure = 'thickness', 
                          hemi='both', 
-                         views=c('si'))
+                         views=c('t4'))
 
 ```
+
+
 Try plotting `area` or `volume` on only one hemisphere (`lh` or `rh`):
 ```{r}
 vis.subject.morph.native(subjects_dir = subjects_dir, 
                          subject_id = 'subject1', 
-                         measure = 'volume', 
+                         measure = 'area', 
                          hemi='rh', 
                          views=c('si'))
 
@@ -75,6 +77,7 @@ vis.subject.label(subjects_dir = subjects_dir,
                   label  = label,
                   hemi =  hemi)
 ```
+
 
 We can also select specific vertices to highlight. Here, we will select just 5 vertices on both hemispheres, although usually effects are larger than just 5 vertices.
 
