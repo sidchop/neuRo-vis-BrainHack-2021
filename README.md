@@ -28,7 +28,8 @@ We will go though how to visualize 4 different types of data:
 -   [Vertex-level
     data](https://github.com/sidchop/neuRo-vis-BrainHack-2021/blob/main/vertex.Rmd)
     *(Note: This note book will not work properly on RStudio Cloud due
-    to space and RAM requirements)*  
+    to space and RAM requirements. Also, visualisation will open in a
+    new window, not within Rstudio)*  
 
 ## Pre-requisites
 
@@ -41,7 +42,7 @@ If you run into any problems while executing these notebooks of have any
 questions, please open an
 [issue](https://github.com/sidchop/neuRo-vis-BrainHack-2021/issues) and
 describing the problem or question. You can also email me at
-<a href="mailto:sid.chopra@monash.edu" class="email">sid.chopra@monash.edu</a>.
+<sid.chopra@monash.edu>.
 
 ## Acknowledgements
 
