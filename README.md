@@ -7,7 +7,7 @@ edition of the [OHBM BrainHack](https://ohbm.github.io/hackathon2021/).
 This short series of R-notebooks will introduce to to some of the
 neuroimaging data visualization tools R. You can work though these
 notebooks on RStudio Cloud, or locally on Rstudio. If you are using
-Rstudio cloud, or have git installed, clone this get repo by typing the
+Rstudio cloud, or have git installed, clone this git repo by typing the
 following in to the terminal:
 
 `git clone https://github.com/sidchop/neuRo-vis-BrainHack-2021.git`
