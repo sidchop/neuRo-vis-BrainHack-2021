@@ -136,7 +136,7 @@ Lets try a little exercise where we overlay a metric on our template image, such
 effect <- readnii("data/frdaltcont_Cohens_d_1mm.nii.gz")  #read in the effect size map
 image(z=, plot.type = "single") #visualize the map (remember to set `plot.type = "single" and select a slice using `z=`, or all slices will be visualized!)
 
-effect[effect<0.4] <- NA #threshold the effect size map to a value between 0 and 1.. maybe we only want to see the strong effects greater than .8.
+effect[effect<0.3] <- NA #threshold the effect size map to a value between 0 and 1.. maybe we only want to see the strong effects greater than .8.
 
 #Complete the `overlay` function code below. Remember that `y=` is the overlay and `z=` is the slice or slices you want to visualize. 
 overlay(x=img , 
@@ -162,7 +162,12 @@ overlay(img,
 
 And a similar plot, using the ortho2 function (which has heaps of additional methods!):
 ```{r}
-ortho2(x = img, y = effect, crosshairs = F, bg = "white", NA.x = T, col.y  = hotmetal())
+ortho2(x = img, y = effect, 
+       crosshairs = F, 
+       bg = "white", 
+       NA.x = T, 
+       col.y  = hotmetal(), 
+       xyz = c(70,50,80))
 ```
 
 

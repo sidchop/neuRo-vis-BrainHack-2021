@@ -91,7 +91,10 @@ regions <- data.frame(cbind(region=c("superior frontal","insula"), # region name
                             hemi=c("right","right"), # hemisphere
                             value=c(2.4,5.5))) # value assigned
 
-ggseg(regions,mapping=aes(fill=as.numeric(value)), hemi= c("right"), colour="white",size=.3) 
+ggseg(regions,mapping=aes(fill=as.numeric(value)),
+      hemi= c("right"), 
+      colour="white",size=.3) +
+  scale_fill_gradientn(colours=c("dodgerblue4","light blue","firebrick","goldenrod"))
 
 ```
 
