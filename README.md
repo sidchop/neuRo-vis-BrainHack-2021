@@ -7,7 +7,7 @@ edition of the [OHBM BrainHack](https://ohbm.github.io/hackathon2021/).
 This short series of R-notebooks will introduce to to some of the
 neuroimaging data visualization tools R. You can work though these
 notebooks on RStudio Cloud, or locally on Rstudio. If you are using
-Rstudio cloud, or have git installed, clone this git repo by typing the
+Rstudio cloud, or have git installed, clone this get repo by typing the
 following in to the terminal:
 
 `git clone https://github.com/sidchop/neuRo-vis-BrainHack-2021.git`
@@ -43,6 +43,12 @@ questions, please open an
 [issue](https://github.com/sidchop/neuRo-vis-BrainHack-2021/issues) and
 describing the problem or question. You can also email me at
 <sid.chopra@monash.edu>.
+
+If you are interested in plotting gifti and cifti data, check out:
+
+-   [ciftiTools](https://github.com/mandymejia/ciftiTools)
+-   [Blog by Jo Etzel on plotting gifti
+    data](https://mvpa.blogspot.com/2020/03/volume-and-surface-brain-plotting-knitr.html)
 
 ## Acknowledgements
 

@@ -158,5 +158,8 @@ vis.mask.on.subject(subjects_dir, subject_id, lh_mask, rh_mask)
 
 Please see the `fsbrian` vignette for a ton of other features, such as group-level visulisations: https://cran.r-project.org/web/packages/fsbrain/vignettes/fsbrain.html
 
+If you are interested in plotting gifti and cifti data, check out:
 
+* [ciftiTools](https://github.com/mandymejia/ciftiTools)
+* [Blog by Jo Etzel](https://mvpa.blogspot.com/2020/03/volume-and-surface-brain-plotting-knitr.html)
 
