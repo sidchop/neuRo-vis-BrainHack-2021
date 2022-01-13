@@ -17,16 +17,16 @@ following in to the terminal:
 We will go though how to visualize 4 different types of data:
 
 -   [Voxel-level
-    data](https://github.com/sidchop/neuRo-vis-BrainHack-2021/blob/main/nifti.Rmd)  
+    data](https://github.com/sidchop/neuRo-vis-BrainHack-2021/nifti.Rmd)  
 
 -   [ROI-level
-    data](https://github.com/sidchop/neuRo-vis-BrainHack-2021/blob/main/roi.Rmd)  
+    data](https://github.com/sidchop/neuRo-vis-BrainHack-2021/roi.Rmd)  
 
 -   [Edge-level
-    data](https://github.com/sidchop/neuRo-vis-BrainHack-2021/blob/main/edge.Rmd)  
+    data](https://github.com/sidchop/neuRo-vis-BrainHack-2021/edge.Rmd)  
 
 -   [Vertex-level
-    data](https://github.com/sidchop/neuRo-vis-BrainHack-2021/blob/main/vertex.Rmd)
+    data](https://github.com/sidchop/neuRo-vis-BrainHack-2021/vertex.Rmd)
     *(Note: This note book will not work properly on RStudio Cloud due
     to space and RAM requirements. Also, visualisation will open in a
     new window, not within Rstudio)*  
