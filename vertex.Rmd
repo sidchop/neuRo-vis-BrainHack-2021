@@ -163,3 +163,5 @@ If you are interested in plotting gifti and cifti data, check out:
 * [ciftiTools](https://github.com/mandymejia/ciftiTools)
 * [Blog by Jo Etzel](https://mvpa.blogspot.com/2020/03/volume-and-surface-brain-plotting-knitr.html)
 
+
+Thanks to [Tim Schäfer & Christine Ecker](https://github.com/dfsp-spirit/fsbrain) for developing fsbrain, this notebook is largely based on their vignette. 
