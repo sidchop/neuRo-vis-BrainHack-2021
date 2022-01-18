@@ -7,8 +7,8 @@ edition of the [OHBM BrainHack](https://ohbm.github.io/hackathon2021/).
 This short series of R-notebooks will introduce to to some of the
 neuroimaging data visualization tools R. You can work though these
 notebooks on RStudio Cloud, or locally on Rstudio. If you are using
-Rstudio cloud, or have git installed, clone this get repo by typing the
-following in to the terminal:
+Rstudio cloud, or have github installed, clone this get repo by typing
+the following in to the terminal:
 
 `git clone https://github.com/sidchop/neuRo-vis-BrainHack-2021.git`
 
@@ -29,7 +29,7 @@ We will go though how to visualize 4 different types of data:
     data](https://github.com/sidchop/neuRo-vis-BrainHack-2021/blob/main/vertex.Rmd)
     *(Note: This note book will not work properly on RStudio Cloud due
     to space and RAM requirements. Also, visualisation will open in a
-    new window, not within Rstudio)*  
+    new window (RGL graphics device), not within Rstudio)*  
 
 ## Pre-requisites
 

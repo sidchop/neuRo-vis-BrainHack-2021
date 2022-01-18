@@ -6,3 +6,4 @@
 *.Rproj
 README.Rmd
 codebank.R
+.gitignore
